@@ -1,5 +1,5 @@
 name: Warp
 version: ${project.version}
 main: com.lavaglijder.warp.Warp
-authors: [TheDeadlySam]
+authors: TheDeadlySam
 description: A easy to use warp plugin
