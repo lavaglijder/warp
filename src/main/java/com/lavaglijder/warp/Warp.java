@@ -1,5 +1,6 @@
 package com.lavaglijder.warp;
 
+import com.lavaglijder.warp.utils.WarpAPI;
 import lavaglijder.com.github.lavautils.lavaapi.LavaAPI;
 import lavaglijder.com.github.lavautils.lavaapi.fileapi.File;
 import lavaglijder.com.github.lavautils.lavaapi.fileapi.FileAPI;
@@ -10,11 +11,14 @@ public final class Warp extends JavaPlugin {
 
     private static LavaAPI lavaAPI;
     private static FileAPI fileAPI;
+    private static WarpAPI warpAPI;
+
 
     @Override
     public void onEnable() {
         lavaAPI = new LavaAPI("Warp");
         fileAPI = new FileAPI(this);
+        warpAPI = new WarpAPI();
 
         fileAPI.addFile("config", FileType.CONFIG);
         fileAPI.addFile("warps");
@@ -38,5 +42,9 @@ public final class Warp extends JavaPlugin {
 
     public static FileAPI getFileAPI() {
         return fileAPI;
+    }
+
+    public static WarpAPI getWarpAPI() {
+        return warpAPI;
     }
 }
