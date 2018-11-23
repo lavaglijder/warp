@@ -4,27 +4,32 @@ import com.lavaglijder.warp.Warp;
 import lavaglijder.com.github.lavautils.lavaapi.LavaAPI;
 import lavaglijder.com.github.lavautils.lavaapi.fileapi.File;
 import lavaglijder.com.github.lavautils.lavaapi.fileapi.FileAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 public class PlayerWarp {
 
     private int x;
     private int y;
     private int z;
-    private int yaw;
-    private int pitch;
+    private float yaw;
+    private float pitch;
     private String name;
+    private World world;
 
     private LavaAPI lavaAPI;
     private FileAPI fileAPI;
     private File warpData;
 
-    public PlayerWarp(int x, int y, int z, int yaw, int pitch, String name) {
+    public PlayerWarp(int x, int y, int z, float yaw, float pitch, World world, String name) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.yaw = yaw;
         this.pitch = pitch;
         this.name = name;
+        this.world = world;
 
         this.fileAPI = Warp.getFileAPI();
         this.lavaAPI = Warp.getLavaAPI();
@@ -35,6 +40,7 @@ public class PlayerWarp {
         warpData.getFile().set(this.name + ".z", this.z);
         warpData.getFile().set(this.name + ".yaw", this.yaw);
         warpData.getFile().set(this.name + ".pitch", this.pitch);
+        warpData.getFile().set(this.name + ".world", this.world.getName());
     }
 
     public PlayerWarp(String name) {
@@ -47,7 +53,9 @@ public class PlayerWarp {
         this.x = warpData.getFile().getInt(this.name + ".x");
         this.y = warpData.getFile().getInt(this.name + ".y");
         this.z = warpData.getFile().getInt(this.name + ".z");
-        this.pitch = warpData.getFile().getInt(this.name + ".pitch");
+        this.pitch = (float) warpData.getFile().getDouble(this.name + ".pitch");
+        this.yaw = (float) warpData.getFile().getDouble(this.name + ".yaw");
+        this.world = Bukkit.getServer().getWorld(warpData.getFile().getString(this.name + ".world"));
     }
 
     public int getX() {
@@ -78,7 +86,7 @@ public class PlayerWarp {
         warpData.getFile().set(this.name + ".z", this.z);
     }
 
-    public int getYaw() {
+    public float getYaw() {
         return yaw;
     }
 
@@ -87,7 +95,7 @@ public class PlayerWarp {
         warpData.getFile().set(this.name + ".yaw", this.yaw);
     }
 
-    public int getPitch() {
+    public float getPitch() {
         return pitch;
     }
 
@@ -126,5 +134,19 @@ public class PlayerWarp {
         }
 
         warpData.getFile().set(this.name, null);
+    }
+
+    public Location getLocation() {
+        Location location = new Location(getWorld(), getX() + .5,getY(),getZ() + .5,getYaw(),getPitch());
+        return location;
+    }
+
+    public World getWorld() {
+        return this.world;
+    }
+    public void setWorld(World world) {
+        this.world = world;
+        warpData.getFile().set(this.name + ".world", this.world);
+
     }
 }

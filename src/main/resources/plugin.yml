@@ -1,5 +1,35 @@
 name: Warp
 version: ${project.version}
 main: com.lavaglijder.warp.Warp
-authors: TheDeadlySam
+authors: [TheDeadlySam]
 description: A easy to use warp plugin
+
+commands:
+  warp:
+    description: Go to a warp
+    usage: /<command> (warp)
+  createwarp:
+    description: Create a warp
+    usage: /<command> (warp)
+  delwarp:
+    description: Delete a warp
+    usage: /<command> (warp)
+  setwarp:
+    description: Create a warp
+    usage: /<command> (warp)
+  warps:
+    description: Get the list of warps
+    usage: /<command> (page)
+  addwarp:
+    description: Create a warp
+    usage: /<command> (warp)
+
+permissions:
+  warp.use:
+    default: true
+  warp.create:
+    default: op
+  warp.delete:
+    default: op
+  warp.list:
+    default: true
