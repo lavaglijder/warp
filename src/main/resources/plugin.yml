@@ -33,3 +33,5 @@ permissions:
     default: op
   warp.list:
     default: true
+  warp.cooldown:
+    default: op

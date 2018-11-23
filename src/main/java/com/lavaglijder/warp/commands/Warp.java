@@ -1,5 +1,6 @@
 package com.lavaglijder.warp.commands;
 
+import com.lavaglijder.warp.utils.CooldownAPI;
 import com.lavaglijder.warp.utils.PlayerWarp;
 import com.lavaglijder.warp.utils.WarpAPI;
 import lavaglijder.com.github.lavautils.lavaapi.fileapi.File;
@@ -20,6 +21,7 @@ public class Warp implements CommandExecutor {
         File configFile = fileAPI.getFile("config");
         File messagesFile = fileAPI.getFile("messages");
         WarpAPI warpAPI = com.lavaglijder.warp.Warp.getWarpAPI();
+        CooldownAPI cooldownAPI = com.lavaglijder.warp.Warp.getCooldownAPI();
 
         if(!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "You're not a player!");
@@ -40,8 +42,12 @@ public class Warp implements CommandExecutor {
 
         if(warpAPI.warpExist(args[0])) {
             PlayerWarp selectedWarp = warpAPI.getWarp(args[0]);
-            p.teleport(selectedWarp.getLocation());
-            p.sendMessage((ChatColor.translateAlternateColorCodes('&', messagesFile.getFile().get("warpCommandSuccess") + "") + "").replace("(warp)", selectedWarp.getName()));
+            if(p.hasPermission("warp.cooldown") || configFile.getFile().getInt("cooldown") <= 0) {
+                cooldownAPI.setCooldown(p, 0, selectedWarp);
+            } else {
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', messagesFile.getFile().getString("warpWait")).replace("(delay)", configFile.getFile().getInt("cooldown") + ""));
+                cooldownAPI.setCooldown(p, configFile.getFile().getInt("cooldown"), selectedWarp);
+            }
             return true;
         }
         p.sendMessage((ChatColor.translateAlternateColorCodes('&', messagesFile.getFile().get("warpCommandWarpNotFound") + "") + "").replace("(warp)", args[0]));

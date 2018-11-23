@@ -4,11 +4,14 @@ import com.lavaglijder.warp.commands.Completer;
 import com.lavaglijder.warp.commands.CreateWarp;
 import com.lavaglijder.warp.commands.DelWarp;
 import com.lavaglijder.warp.commands.Warps;
+import com.lavaglijder.warp.events.Move;
+import com.lavaglijder.warp.utils.CooldownAPI;
 import com.lavaglijder.warp.utils.WarpAPI;
 import lavaglijder.com.github.lavautils.lavaapi.LavaAPI;
 import lavaglijder.com.github.lavautils.lavaapi.fileapi.File;
 import lavaglijder.com.github.lavautils.lavaapi.fileapi.FileAPI;
 import lavaglijder.com.github.lavautils.lavaapi.fileapi.FileType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +20,7 @@ public class Warp extends JavaPlugin {
     private static LavaAPI lavaAPI;
     private static FileAPI fileAPI;
     private static WarpAPI warpAPI;
+    private static CooldownAPI cooldownAPI;
 
 
     @Override
@@ -37,6 +41,8 @@ public class Warp extends JavaPlugin {
         messagesFile.addDefault("warpUsage", "&cUsage: /warp (warp)");
         messagesFile.addDefault("createWarpUsage", "&cUsage: /createwarp (name)");
         messagesFile.addDefault("warpsUsage", "&cUsage: /warps (name)");
+        messagesFile.addDefault("warpWait", "&aTeleporting in (delay) seconds");
+        messagesFile.addDefault("warpMoved", "&cTeleport failed, you moved!");
         messagesFile.addDefault("warpCommandSuccess", "&aYou have been warped to: &e(warp)&a!");
         messagesFile.addDefault("warpCommandWarpNotFound", "&cWarp &e(warp) &cdoes not exist!");//
         messagesFile.addDefault("createWarpExist", "&cThat warp does already exist!");
@@ -61,6 +67,9 @@ public class Warp extends JavaPlugin {
         registerCommand("warps", new Warps());
         registerCommand("addwarp", new CreateWarp());
         warpAPI = new WarpAPI();
+        cooldownAPI = new CooldownAPI();
+
+        Bukkit.getServer().getPluginManager().registerEvents(new Move(), this);
     }
 
     @Override
@@ -79,6 +88,10 @@ public class Warp extends JavaPlugin {
 
     public static WarpAPI getWarpAPI() {
         return warpAPI;
+    }
+
+    public static CooldownAPI getCooldownAPI() {
+        return cooldownAPI;
     }
 
     private void registerCommand(String name, CommandExecutor executor) {
